@@ -1,0 +1,856 @@
+openapi: 3.0.0
+info:
+  title: QuantifiedSelf App Statement
+  description: >
+    <h3> Login Table Schema </h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Column Name</th>
+          <th>Column Type</th>
+          <th>Constraints</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>user_id</td>
+          <td>Integer</td>
+          <td>Primary Key, Auto Increment</td>
+        </tr>
+        <tr>
+          <td>username</td>
+          <td>String</td>
+          <td>Unique, Not Null</td>
+        </tr>
+        <tr>
+          <td>password</td>
+          <td>String</td>
+          <td>Not Null</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3> Tracker Table Schema </h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Column Name</th>
+          <th>Column Type</th>
+          <th>Constraints</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>tracker_id</td>
+          <td>Integer</td>
+          <td>Primary Key, Auto Increment</td>
+        </tr>
+        <tr>
+          <td>user_id</td>
+          <td>Integer</td>
+          <td>Foreign Key(user.user_id)</td>
+        </tr>
+        <tr>
+          <td>tracker_name</td>
+          <td>String</td>
+          <td>Unique, Not Null</td>
+        </tr>
+        <tr>
+          <td>description</td>
+          <td>String</td>
+          <td>Not Null</td>
+        </tr>
+        <tr>
+          <td>t_type</td>
+          <td>String</td>
+          <td>Not Null</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3> Log Table Schema </h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Column Name</th>
+          <th>Column Type</th>
+          <th>Constraints</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>tracker_id</td>
+          <td>Integer</td>
+          <td>Primary Key, Foreign Key (tracker.tracker_id)</td>
+        </tr>
+        <tr>
+          <td>options</td>
+          <td>String</td>
+          <td>Not Null</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3> Setting Table Schema </h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Column Name</th>
+          <th>Column Type</th>
+          <th>Constraints</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>logger_id</td>
+          <td>Integer</td>
+          <td>Primary Key, Auto Increment</td>
+        </tr>
+        <tr>
+          <td>tracker_id</td>
+          <td>Integer</td>
+          <td>Foreign Key (tracker.tracker_id)</td>
+        </tr>
+        <tr>
+          <td>t_value</td>
+          <td>Integer</td>
+          <td>Not Null</td>
+        </tr>
+        <tr>
+          <td>comments</td>
+          <td>String</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3> Error Codes </h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Resource</th>
+          <th>Error Code</th>
+          <th>Message</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Login</td>
+          <td>USER001</td>
+          <td>Username is required and should be string.</td>
+        </tr>
+        <tr>
+          <td>Login</td>
+          <td>USER002</td>
+          <td>Password is required and should be string.</td>
+        </tr>
+        <tr>
+          <td>Tracker</td>
+          <td>TRACKER001</td>
+          <td>Tracker name is required and should be string.</td>
+        </tr>
+        <tr>
+          <td>Tracker</td>
+          <td>TRACKER002</td>
+          <td>Tracker description is required and should be string.</td>
+        </tr>
+        <tr>
+          <td>Tracker</td>
+          <td>TRACKER003</td>
+          <td>Tracker type is required.</td>
+        </tr>
+        <tr>
+          <td>Log</td>
+          <td>LOGGER001</td>
+          <td>Tracker value is required and should be integer.</td>
+        </tr>
+        <tr>
+          <td>Log</td>
+          <td>LOGGER002</td>
+          <td>Timestamp must be in the format 'YYYY-MM-DD hh:mm'.</td>
+        </tr>
+        <tr>
+          <td>Log</td>
+          <td>LOGGER003</td>
+          <td>Comments must be string.</td>
+        </tr>
+        <tr>
+          <td>Setting</td>
+          <td>SETTING001</td>
+          <td>Setting is required and should be string and have comma-separeted values.</td>
+        </tr>
+      </tbody>
+    </table>
+
+  version: 1.0.0
+servers:
+  - url: http://127.0.0.1:5000/
+paths:
+  /api/user/{uname}:
+    description: End point to read, update and delete a user resource with uname = username.
+    get:
+      description: Operation to Read user resource.
+      parameters:
+        - in: path
+          name: uname
+          required: true
+          schema:
+            type: string
+            example: rakesh
+      responses:
+        "200":
+          description: Request Successful
+          content:
+            application/json:
+              schema:
+                title: User
+                type: object
+                properties:
+                  user_id:
+                    type: integer
+                    example: 201
+                  username:
+                    type: string
+                    example: rakesh
+                  password:
+                    type: string
+                    example: abc
+        "404":
+          description: User not found
+
+    put:
+      description: Operation to update the User resource.
+      parameters:
+        - in: path
+          name: uname
+          required: true
+          schema:
+            type: string
+            example: rakesh
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: rakesh
+                password:
+                  type: string
+                  example: abc
+      responses:
+        "200":
+          description: Successfuly updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user_id:
+                    type: integer
+                    example: 201
+                  username:
+                    type: string
+                    example: rakesh
+                  password:
+                    type: string
+                    example: abc
+        "404":
+          description: User not found
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  error_message:
+                    type: string
+    delete:
+      description: Operation to delete the course resource
+      parameters:
+        - in: path
+          name: uname
+          required: true
+          schema:
+            type: string
+            example: rakesh
+      responses:
+        "200":
+          description: Successfully Deleted
+        "404":
+          description: User not found
+
+  /api/user:
+    description: End point to create user resource
+    post:
+      description: Operation to create the user resource
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: rakesh
+                password:
+                  type: string
+                  example: abc
+      responses:
+        "201":
+          description: Successfully Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user_id:
+                    type: integer
+                    example: 201
+                  username:
+                    type: string
+                    example: rakesh
+                  password:
+                    type: string
+                    example: abc
+        "409":
+          description: user already exist
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  error_msg:
+                    type: string
+  /api/tracker/{uid}:
+    description: Url to read, update and delete the student resource.
+    get:
+      description: Operation to read Tracker resource
+      parameters:
+        - in: path
+          name: uid
+          required: true
+          schema:
+            type: integer
+            example: 201
+      responses:
+        "200":
+          description: Request Successful
+          content:
+            application/json:
+              schema:
+                title: student object
+                type: object
+                properties:
+                  tracker_id:
+                    type: integer
+                    example: 101
+                  user_id:
+                    type: string
+                    example: Narendra
+                  tracker_name:
+                    type: string
+                    example: mood
+                  description:
+                    type: string
+                    example: It records mood
+                  t_type:
+                    type: string
+                    example: MCQ
+        "500":
+          description: Internal server error
+        "404":
+          description: Tracker not found
+
+    post:
+      description:
+      parameters:
+        - in: path
+          name: uid
+          required: true
+          schema:
+            type: integer
+            example: 101
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+                  example: Narendra
+                tracker_name:
+                  type: string
+                  example: mood
+                description:
+                  type: string
+                  example: It recors  ood
+                t_type:
+                  type: string
+                  example: mcq
+      responses:
+        "200":
+          description: Successfully updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  tracker_id:
+                    type: integer
+                    example: 101
+                  user_id:
+                    type: string
+                    example: Narendra
+                  tracker_name:
+                    type: string
+                    example: mood
+                  description:
+                    type: string
+                    example: It records mood
+                  t_type:
+                    type: string
+                    example: MCQ
+        "404":
+          description: Tracker not found
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  error_message:
+                    type: string
+        "409":
+          description: Tracker already exist
+  /api/tracker/{tid}/{uid}:
+    description: Url to read, update and delete the student resource.
+    put:
+      description: Operation to update tracker resource
+      parameters:
+        - in: path
+          name: uid
+          required: true
+          schema:
+            type: integer
+            example: 201
+        - in: path
+          name: tid
+          required: true
+          schema:
+            type: integer
+            example: 201
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tracker_name:
+                  type: string
+                  example: mood
+                description:
+                  type: string
+                  example: It recors  ood
+      responses:
+        "200":
+          description: Request Successful
+          content:
+            application/json:
+              schema:
+                title: student object
+                type: object
+                properties:
+                  tracker_id:
+                    type: integer
+                    example: 101
+                  user_id:
+                    type: string
+                    example: Narendra
+                  tracker_name:
+                    type: string
+                    example: mood
+                  description:
+                    type: string
+                    example: It records mood
+                  t_type:
+                    type: string
+                    example: MCQ
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  error_message:
+                    type: string
+        "404":
+          description: Tracker not found
+
+    delete:
+      description:
+      parameters:
+        - in: path
+          name: uid
+          required: true
+          schema:
+            type: integer
+            example: 201
+        - in: path
+          name: tid
+          required: true
+          schema:
+            type: integer
+            example: 201
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                uid_id:
+                  type: integer
+                  example: 201
+                tid_id:
+                  type: integer
+                  example: 201
+      responses:
+        "200":
+          description: Successfully deleted
+        "404":
+          description: Tracker not found
+
+  /api/log/{tid}:
+    description: Url to read, update and delete the student resource.
+    get:
+      description: Operation to read student resource
+      parameters:
+        - in: path
+          name: tid
+          required: true
+          schema:
+            type: integer
+            example: 201
+      responses:
+        "200":
+          description: Request Successful
+          content:
+            application/json:
+              schema:
+                title: student object
+                type: object
+                properties:
+                  logger_id:
+                    type: integer
+                    example: 101
+                  tracker_id:
+                    type: integer
+                    example: 101
+                  t_value:
+                    type: string
+                    example: Narendra
+                  comment:
+                    type: string
+                    example: mood
+                  timestamp:
+                    type: string
+                    example: 2022-03-20 02:35
+        "404":
+          description: Log not found
+
+    post:
+      description:
+      parameters:
+        - in: path
+          name: tid
+          required: true
+          schema:
+            type: integer
+            example: 101
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                timestamp:
+                  type: string
+                  example: 2022-03-20 02:35
+                comment:
+                  type: string
+                  example: good mood
+                t_value:
+                  type: string
+                  example: mcq
+      responses:
+        "201":
+          description: Successfully updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  logger_id:
+                    type: integer
+                    example: 101
+                  tracker_id:
+                    type: integer
+                    example: 101
+                  t_value:
+                    type: string
+                    example: Narendra
+                  comment:
+                    type: string
+                    example: mood
+                  timestamp:
+                    type: string
+                    example: 2022-03-20 02:35
+
+        "404":
+          description: Log not found
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  error_message:
+                    type: string
+  /api/log/{tid}/{lid}:
+    description: Url to read, update and delete the student resource.
+    put:
+      description: Operation to update Log resource
+      parameters:
+        - in: path
+          name: lid
+          required: true
+          schema:
+            type: integer
+            example: 201
+        - in: path
+          name: tid
+          required: true
+          schema:
+            type: integer
+            example: 201
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                timestamp:
+                  type: string
+                  example: 2022-03-20 02:35
+                comment:
+                  type: string
+                  example: good mood
+                t_value:
+                  type: string
+                  example: mcq
+      responses:
+        "200":
+          description: Request Successful
+          content:
+            application/json:
+              schema:
+                title: student object
+                type: object
+                properties:
+                  tracker_id:
+                    type: integer
+                    example: 101
+                  user_id:
+                    type: string
+                    example: Narendra
+                  tracker_name:
+                    type: string
+                    example: mood
+                  description:
+                    type: string
+                    example: It records mood
+                  t_type:
+                    type: string
+                    example: MCQ
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  error_message:
+                    type: string
+        "404":
+          description: Log not found
+
+    delete:
+      description:
+      parameters:
+        - in: path
+          name: lid
+          required: true
+          schema:
+            type: integer
+            example: 201
+        - in: path
+          name: tid
+          required: true
+          schema:
+            type: integer
+            example: 201
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                lid_id:
+                  type: integer
+                  example: 201
+                tid_id:
+                  type: integer
+                  example: 201
+      responses:
+        "200":
+          description: Successfully deleted
+        "404":
+          description: Log not found
+
+  /api/setting/{tid}:
+    description: change setting for perticular tracker
+    get:
+      description:
+      parameters:
+        - in: path
+          name: tid
+          required: true
+          schema:
+            type: integer
+            example: 101
+      responses:
+        "200":
+          description: Request Successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    tracker_id:
+                      type: integer
+                      example: 10
+                    options:
+                      type: string
+                      example: a,b,c
+        "400":
+          description: Invalid tid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  error_message:
+                    type: string
+        "404":
+          description:
+
+    post:
+      description:
+      parameters:
+        - in: path
+          name: tid
+          required: true
+          schema:
+            type: integer
+            example: 101
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tracker_id:
+                  type: integer
+                  example: 10
+                options:
+                  type: string
+                  example: a,b,c
+      responses:
+        "201":
+          description: changed successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    tracker_id:
+                      type: integer
+                      example: 10
+                    options:
+                      type: string
+                      example: a,b,c
+        "404":
+          description: Tracker not found
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  error_message:
+                    type: string
+    delete:
+      description:
+      parameters:
+        - in: path
+          name: tid
+          required: true
+          schema:
+            type: integer
+            example: 201
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tracker_id:
+                  type: integer
+                  example: 201
+                options:
+                  type: string
+                  example: a,b,c
+      responses:
+        "200":
+          description: Successfully deleted
+        "404":
+          description: Tracker not found

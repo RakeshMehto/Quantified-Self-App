@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{t.tracker_name}} Tracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+</head>
+
+<body>
+    <div class="position-relative">
+        <a href="/dashboard" class="btn btn-primary m-2">Go to DashBoard</a>
+        <a href="/new_log/{{t.tracker_id}}" class="btn btn-secondary m-2 position-absolute top-0 end-0">Log a new
+            event</a>
+    </div>
+    <h1>{{t.tracker_name}} Tracker</h1>
+    {% if logs|length == 0 %}
+    <div class="text-center">
+        <img src="/static/notFound.jpg" alt="No image Found" class="pt-1">
+    </div>
+    {% else %}
+    <div class="position-relative">
+        <img src="/static/graph.jpg" alt="No graph Found" style="width: 40%;" class="text-center">
+        <table class="table table-hover me-4 mt-3 position-absolute top-0 end-0" style="width: 50%;">
+            <thead>
+                <tr>
+                    <th>Sl. No</th>
+                    <th>Timestamp</th>
+                    <th>Value</th>
+                    <th>Comments</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for l in logs %}
+                <tr>
+                    <td>{{loop.index}}</td>
+                    <td>{{l.timestamp}}</td>
+                    {% if t.t_type == 'mcq' %}
+                    <td>{{options[l.t_value-1]}}</td>
+                    {% else %}
+                    <td>{{l.t_value}}</td>
+                    {% endif %}
+                    <td>{{l.comments}}</td>
+                    <td><a href="/edit_log/{{t.tracker_id}}/{{l.logger_id}}"><i class="bi bi-pencil-square"></i>
+                            Edit/Delete log</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+    </div>
+</body>
+
+</html>

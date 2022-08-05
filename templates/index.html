@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        Home
+    </title>
+</head>
+
+<body>
+    <h3></h3>
+    Hello!
+    <form action="">
+        <label for="options">select an option:</label>
+        <select name="options" id="options">
+            <option value="1">number</option>
+            <option value="2">text</option>
+            <option value="3">multiple choice</option>
+        </select>
+        <br><br>
+        <p id="number_input_label">Number input enabled</p>
+        <br id="br1">
+        <input id="number_input" type="number">
+        <p id="text_input_label">Text input enabled</p>
+        <br id="br2">
+        <input id="text_input" type="text">
+        <p id="mc_input_label">MC input enabled</p>
+        <br id="br3">
+        <input type="radio" id="mc1" name="mc" value="option1">
+        <label for="mc1" id="mclabel1">mc option 1</label><br>
+        <input type="radio" id="mc2" name="mc" value="option2">
+        <label for="mc2" id="mclabel2">mc option 2</label><br>
+        <input type="radio" id="mc3" name="mc" value="option3">
+        <label for="mc3" id="mclabel3">mc option 3</label><br>
+        <br>
+        <input type="submit" value="Submit">
+    </form>
+</body>
+<script type="text/javascript" src="{{ url_for('static',filename='app.js') }}"></script>
+
+</html>
